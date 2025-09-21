@@ -41,6 +41,21 @@
         
     }
 
+    .photo-3d {
+  width: min(60vw, 280px);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5),
+              0 0 30px rgba(255,255,255,0.25);
+  transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.photo-3d:hover {
+  transform: perspective(800px) rotateY(5deg) rotateX(5deg) scale(1.05);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6),
+              0 0 50px rgba(255,255,255,0.4);
+}
+
+
     .flash::after {
   content:"";
   position:fixed; inset:0;
@@ -86,12 +101,147 @@
     }
     .hint { opacity: 0.7; font-size: 0.9rem; }
     .hidden { display: none !important; }
+
+    @keyframes boomPulse {
+  0%   { transform: scale(1);   }
+  30%  { transform: scale(1.18);}
+  60%  { transform: scale(0.92);}
+  100% { transform: scale(1);   }
+}
+
+.boom {
+   animation: boomPulse 0.35s ease;
+}
+
+.flash::after {
+  content:"";
+  position:fixed; inset:0;
+  background:white;
+  opacity:0; pointer-events:none;
+  animation: flashAnim 0.2s ease;
+}
+@keyframes flashAnim {
+  0% { opacity:0.6; }
+  100% { opacity:0; }
+}
+
+.lyrics-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 10; /* pastikan di atas foto/objek lain */
+}
+
+.lyrics {
+  width: min(900px, 92vw);
+  max-height: 70vh;
+  overflow-y: hidden; /* cegah scroll manual menimpa */
+  scroll-behavior: smooth;
+  position: relative;
+  z-index: 20;
+}
+
+.photo-3d {
+  z-index: 5;
+  position: relative;
+}
+/* Mobile-friendly tweaks */
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  header, footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .photo-wrap {
+    margin: 8px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .photo-3d {
+    width: 50vw;          /* gambar otomatis 50% lebar layar */
+    max-width: 160px;     /* jangan lebih besar dari 160px */
+    height: auto;
+    z-index: 5;
+  }
+
+  .lyrics-wrap {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-height: 55vh;     /* biar lirik punya ruang lebih */
+    overflow: hidden;
+  }
+
+  .lyrics {
+    max-height: inherit;
+    padding: 0 8px;
+    font-size: 0.95rem;
+  }
+
+  .line {
+    font-size: 1rem;
+    padding: 6px;
+  }
+
+  .line.active {
+    font-size: 1.4rem;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  button, input[type="range"] {
+    font-size: 0.85rem;
+  }
+
+  input[type="range"] {
+    width: 90%;
+  }
+}
+
+footer {
+  margin-bottom: 10px;
+}
+
+.lyrics { position: relative; z-index: 10; }
+.photo-3d {
+  display: block;
+  width: auto;           /* biar nggak melar */
+  height: auto;          /* biar nggak gepeng */
+  max-width: 60vw;       /* batas lebar relatif */
+  max-height: 160px;     /* batas tinggi biar nggak nutup lyric */
+  border-radius: 20px;
+  object-fit: cover;     /* jaga proporsi isi */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5),
+              0 0 30px rgba(255,255,255,0.25);
+  z-index: 5;
+}
+
+@media (max-width: 768px) {
+  .photo-3d {
+    max-width: 50vw;    /* relatif ke layar */
+    max-height: 140px;  /* jangan terlalu tinggi */
+  }
+}
+
+
   </style>
 </head>
 <body>
   <div class="bg" aria-hidden="true"></div>
   <div class="overlay" aria-hidden="true"></div>
-
+    
   <div class="app">
     <header>
       <div class="meta">
@@ -108,10 +258,15 @@
         <span id="clock" class="hint">00:00 / 00:00</span>
       </div>
     </header>
+<div class="photo-wrap">
+  <img src="{{ cover_url }}" alt="Cover" class="photo-3d" id="pulse-photo">
+</div>
 
-    <div class="lyrics-wrap">
-      <div id="lyrics" class="lyrics"></div>
-    </div>
+<div class="lyrics-wrap">
+  <div id="lyrics" class="lyrics"></div>
+</div>
+
+
 
     <footer>
       <div class="hint">Space = Play/Pause • ←/→ = -/+ 5s</div>
@@ -130,6 +285,53 @@
     const pauseBtn = document.getElementById('pause');
     const seek = document.getElementById('seek');
     const clock = document.getElementById('clock');
+
+
+    // Beat otomatis tiap 1 detik sekali
+setInterval(() => {
+  if (!audio.paused) {
+    triggerBoom();
+  }
+}, 1000);
+
+// Klik foto → jedag-jedug
+const photo = document.getElementById('pulse-photo');
+photo.addEventListener('click', () => {
+  photo.classList.add('boom');
+  setTimeout(() => photo.classList.remove('boom'), 400);
+});
+
+// Modifikasi triggerBoom supaya juga ke foto
+function triggerBoom() {
+  const active = document.querySelector('.line.active');
+  const photo = document.getElementById('pulse-photo');
+
+  [active, photo].forEach(el => {
+    if (el) {
+      el.classList.add('boom');
+      setTimeout(() => el.classList.remove('boom'), 400);
+    }
+  });
+}
+
+function setActive(idx) {
+  if (idx === activeIdx) return;
+  const prev = lyricsEl.querySelector('.line.active');
+  if (prev) prev.classList.remove('active');
+
+  const next = lyricsEl.querySelector(`.line[data-index="${idx}"]`);
+  if (next) {
+    next.classList.add('active');
+    // auto focus ke tengah viewport container
+    next.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest'
+    });
+  }
+  activeIdx = idx;
+}
+
 
     // Render lines
     DATA.forEach((item, idx) => {
@@ -240,11 +442,19 @@
 
     function triggerBoom() {
     const active = document.querySelector('.line.active');
-    if (active) {
-        active.classList.add('boom');
-        setTimeout(() => active.classList.remove('boom'), 400);
+    const photo = document.getElementById('pulse-photo');
+
+    document.body.classList.add("flash");
+    setTimeout(()=>document.body.classList.remove("flash"),200);
+
+    [active, photo].forEach(el => {
+        if (el) {
+        el.classList.add('boom');
+        setTimeout(() => el.classList.remove('boom'), 400);
+        }
+    });
     }
-    }
+
 
   </script>
 </body>
