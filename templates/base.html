@@ -235,6 +235,63 @@ footer {
   }
 }
 
+/* Aturan umum untuk layar kecil */
+@media (max-width: 576px) {
+    /* Table horizontal scroll */
+    #employees-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Tombol aksi ditumpuk */
+    #employees-table td .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    /* Card summary lebih rapat */
+    #summary-cards .col-sm-6 {
+        margin-bottom: 10px;
+    }
+
+    /* Modal agar full width di mobile */
+    .modal-dialog {
+        max-width: 95%;
+        margin: 10px auto;
+    }
+}
+
+/* Aturan spesifik untuk iPhone 11 (414px width) */
+@media only screen 
+  and (device-width: 414px) 
+  and (device-height: 896px) 
+  and (-webkit-device-pixel-ratio: 2) {
+
+    body {
+        font-size: 15px; /* Sedikit lebih kecil supaya pas */
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) 
+                 env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    /* Input range tanggal full width */
+    #waktu-penilaian-range {
+        font-size: 14px;
+        width: 100%;
+    }
+
+    /* Panel heading padding lebih kecil */
+    .subheader {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Tombol dropdown export lebih lebar biar gampang di-tap */
+    .btn-group .btn {
+        min-width: 140px;
+    }
+}
+
 
   </style>
 </head>

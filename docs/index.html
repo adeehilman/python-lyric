@@ -235,6 +235,63 @@ footer {
   }
 }
 
+/* Aturan umum untuk layar kecil */
+@media (max-width: 576px) {
+    /* Table horizontal scroll */
+    #employees-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Tombol aksi ditumpuk */
+    #employees-table td .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    /* Card summary lebih rapat */
+    #summary-cards .col-sm-6 {
+        margin-bottom: 10px;
+    }
+
+    /* Modal agar full width di mobile */
+    .modal-dialog {
+        max-width: 95%;
+        margin: 10px auto;
+    }
+}
+
+/* Aturan spesifik untuk iPhone 11 (414px width) */
+@media only screen 
+  and (device-width: 414px) 
+  and (device-height: 896px) 
+  and (-webkit-device-pixel-ratio: 2) {
+
+    body {
+        font-size: 15px; /* Sedikit lebih kecil supaya pas */
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) 
+                 env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    /* Input range tanggal full width */
+    #waktu-penilaian-range {
+        font-size: 14px;
+        width: 100%;
+    }
+
+    /* Panel heading padding lebih kecil */
+    .subheader {
+        padding: 0.5rem 1rem;
+    }
+
+    /* Tombol dropdown export lebih lebar biar gampang di-tap */
+    .btn-group .btn {
+        min-width: 140px;
+    }
+}
+
 
   </style>
 </head>
@@ -276,7 +333,7 @@ footer {
 
   <script>
     const AUDIO_SRC = "assets/song-real.mp3";
-    const DATA = [{"start": 4.0, "text": "Teman ku semua pada jahat tante"}, {"start": 8.0, "text": "aku lagi susah mereka gak ada"}, {"start": 13.0, "text": "coba kalau lagi jaya"}, {"start": 15.0, "text": "aku di puja puja nya tante"}, {"start": 20.0, "text": "sudah terbiasa terjadi tante"}, {"start": 24.0, "text": "teman datang kalau lagi butuh saja"}, {"start": 28.0, "text": "coba kalau lagi susah"}, {"start": 31.0, "text": "mereka semua menghilang"}];
+    const DATA = [{"start": 0.0, "text": "…"}, {"start": 1.0, "text": "…"}, {"start": 2.0, "text": "…"}, {"start": 3.0, "text": "…"}, {"start": 4.0, "text": "Teman ku semua pada jahat tante"}, {"start": 8.0, "text": "aku lagi susah mereka gak ada"}, {"start": 13.0, "text": "coba kalau lagi jaya"}, {"start": 15.0, "text": "aku di puja puja nya tante"}, {"start": 20.0, "text": "sudah terbiasa terjadi tante"}, {"start": 24.0, "text": "teman datang kalau lagi butuh saja"}, {"start": 28.0, "text": "coba kalau lagi susah"}, {"start": 31.0, "text": "mereka semua menghilang"}];
 
     // DOM
     const audio = document.getElementById('audio');
