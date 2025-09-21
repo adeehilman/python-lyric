@@ -263,35 +263,44 @@ footer {
     }
 }
 
-/* Aturan spesifik untuk iPhone 11 (414px width) */
+/* Umum untuk layar kecil */
+@media (max-width: 576px) {
+    .lyric-photo {
+        display: block;
+        max-width: 90%;
+        height: auto;
+        margin: 0 auto 15px auto;
+        border-radius: 12px;
+    }
+
+    /* Pastikan teks tidak overlap gambar */
+    #deleteMessage, #lyrics-container {
+        margin-top: 15px;
+    }
+}
+
+/* Khusus untuk iPhone 11 (414px × 896px, DPR 2) */
 @media only screen 
   and (device-width: 414px) 
   and (device-height: 896px) 
   and (-webkit-device-pixel-ratio: 2) {
-
-    body {
-        font-size: 15px; /* Sedikit lebih kecil supaya pas */
-        padding: env(safe-area-inset-top) env(safe-area-inset-right) 
-                 env(safe-area-inset-bottom) env(safe-area-inset-left);
+    
+    .lyric-photo {
+        max-width: 80%;       /* biar lebih kecil di layar */
+        height: auto;
+        object-fit: cover;    /* gambar tetap proporsional */
+        margin: 10px auto;
     }
 
-    /* Input range tanggal full width */
-    #waktu-penilaian-range {
-        font-size: 14px;
-        width: 100%;
+    .lyric-container {
+        padding: 0 10px;      /* kasih napas di kanan kiri */
     }
 
-    /* Panel heading padding lebih kecil */
-    .subheader {
-        padding: 0.5rem 1rem;
-    }
-
-    /* Tombol dropdown export lebih lebar biar gampang di-tap */
-    .btn-group .btn {
-        min-width: 140px;
+    .lyric-line {
+        font-size: 15px;      /* sedikit lebih kecil biar pas di layar */
+        line-height: 1.4em;
     }
 }
-
 
   </style>
 </head>
@@ -316,7 +325,7 @@ footer {
       </div>
     </header>
 <div class="photo-wrap">
-  <img src="{{ cover_url }}" alt="Cover" class="photo-3d" id="pulse-photo">
+  <img src="{{ cover_url }}" alt="Cover"  class="lyric-photo" id="pulse-photo">
 </div>
 
 <div class="lyrics-wrap">
