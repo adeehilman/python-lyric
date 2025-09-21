@@ -62,7 +62,7 @@ def main():
     )
     tpl = env.get_template("base.html")
 
-    audio_url = "assets/song.mp3"
+    audio_url = "assets/song-real.mp3"
     cover_url = "assets/cover.jpg" if (ASSETS / "cover.jpg").exists() else "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
 
     html = tpl.render(
