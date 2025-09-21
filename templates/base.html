@@ -30,6 +30,28 @@
       position: relative; height: 100%; display: grid;
       grid-template-rows: auto 1fr auto; gap: 12px; padding: 16px;
     }
+    .boom {
+        animation: pulse 0.4s ease;
+        }
+        @keyframes pulse {
+        0%   { transform: scale(1);   }
+        30%  { transform: scale(1.15);}
+        60%  { transform: scale(0.95);}
+        100% { transform: scale(1);   }
+        
+    }
+
+    .flash::after {
+  content:"";
+  position:fixed; inset:0;
+  background:#fff;
+  opacity:0; pointer-events:none;
+  animation: flashAnim 0.25s ease;
+}
+@keyframes flashAnim { 
+  0%{opacity:0.6;} 100%{opacity:0;} 
+}
+
     header, footer { display: flex; align-items: center; justify-content: space-between; }
     header .meta { display: flex; gap: 12px; align-items: center; }
     header img.cover {
@@ -192,6 +214,38 @@
     function updateClock() {
       clock.textContent = `${fmtTime(audio.currentTime)} / ${fmtTime(duration)}`;
     }
+
+    // contoh detik beat (isi sesuai lagu)
+    const BEATS = [3, 8, 11, 15, 19, 23, 28];
+
+    let lastBeatIdx = -1;
+
+    audio.addEventListener('timeupdate', () => {
+    if (duration) seek.value = Math.round((audio.currentTime / duration) * 1000);
+    syncLyrics(audio.currentTime);
+    checkBeat(audio.currentTime);
+    updateClock();
+    });
+
+    function checkBeat(t) {
+    // cari beat berikutnya
+    for (let i = 0; i < BEATS.length; i++) {
+        if (Math.abs(t - BEATS[i]) < 0.2 && i !== lastBeatIdx) {
+        triggerBoom();
+        lastBeatIdx = i;
+        break;
+        }
+    }
+    }
+
+    function triggerBoom() {
+    const active = document.querySelector('.line.active');
+    if (active) {
+        active.classList.add('boom');
+        setTimeout(() => active.classList.remove('boom'), 400);
+    }
+    }
+
   </script>
 </body>
 </html>
